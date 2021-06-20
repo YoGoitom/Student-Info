@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3b3ac6d2-203f-4cc4-a58d-699a7d270ab9" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="studentsFlow" doc:id="3a9888e6-503c-4196-84c7-00ffade8f0e6" >
+		<http:listener doc:name="Listener" doc:id="1f1d28f2-ca32-4e74-b2b7-5b3f74c2f666" config-ref="HTTP_Listener_config" path="/student"/>
+		<ee:transform doc:name="Transform Message" doc:id="eae435bb-54dc-479e-ad2b-e435838f9412" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var name = attributes.queryParams.name
+var date = now() as String {format: "MM-dd-y"}
+---
+"Hello " ++ name ++ " welcome to mulesoft, today is " ++ date]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
